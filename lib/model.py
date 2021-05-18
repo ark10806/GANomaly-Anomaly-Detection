@@ -276,8 +276,10 @@ class BaseModel():
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
                     sav_fName = allFiles[i]
                     sav_fName = sav_fName.replace("\\", '/')
-                    sav_fName = allFiles[allFiles.rfind('/')+1:]
-                    
+                    sav_fName = sav_fName[sav_fName.rfind('\\')+1:]
+                    # sav_fName = allFiles[i][allFiles[i].rfind('\\')+1:]
+                    # sav_fName = sav_fName.replace("\\", '/')
+
                     # linux_dir = sav_fName.rfind('/')
                     # windows_dir = sav_fName.rfind('\\')
                     # print(sav_fName, linux_dir, windows_dir)
