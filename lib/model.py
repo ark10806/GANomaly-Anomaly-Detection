@@ -188,7 +188,7 @@ class BaseModel():
             self.train_one_epoch()
             res = self.test()
             # if res[self.opt.metric] > best_auc:
-            if (self.epoch>50 and self.epoch % 20 == 0):
+            if (self.epoch % self.opt.save_weight_freq == 0):
                 best_auc = res[self.opt.metric]
                 self.save_weights(self.epoch)
             self.visualizer.print_current_performance(res, best_auc)
@@ -278,7 +278,7 @@ class BaseModel():
                     # print(f'{sav_fName}\t', end='') # sav_fName: Paired file name between RAW Images and Preprocessed Images
                     print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .4f}%')
                     rawPATH = 'RAW\\' # 1280x720 원본 이미지 경로.
-                    raw_img, new_diff_img, ZeroOneTwo_yehhhh, ab_score_dataSet = heatMap.DrawResult(rawPATH, diff_img, sav_fName, rawPATH, params=None)
+                    raw_img, new_diff_img, ZeroOneTwo_yehhhh, ab_score_dataSet = heatMap.DrawResult(diff_img, sav_fName, rawPATH, params=None)
                     ab_scores_dataSet.append(ab_score_dataSet)
 
                     ab_RGB.append(np.sum(new_diff_img) / (self.opt.isize*self.opt.isize*255)) ## ab_RGB를 Draw_Result 하고 계산해야함!
@@ -301,8 +301,8 @@ class BaseModel():
                     
                     if (self.epoch4Test == 1 or self.epoch4Test % 20 == 0):
                         # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName, newImg)
-                        cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result.bmp', newImg)
-                        # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName[:-4] + '_result.bmp', newImg)
+                        cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result.bmp', newImg)###
+                        # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName[:-4] + '_result.bmp', newImg)###
                         # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName[:-4] + '_diff.bmp', np.transpose(generated_img, (2,1,0)))
 
             csvfile = open('./ab_score.csv', 'w', newline='')

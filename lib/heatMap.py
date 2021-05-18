@@ -57,9 +57,6 @@ def create_heatmap3(im_map, im_cloud):
     im_map = cv2.normalize(im_map, im_map, 0, 255, cv2.NORM_MINMAX)
     im_cloud = np.transpose(im_cloud, (1,2,0))
     im_cloud = cv2.normalize(im_cloud, im_cloud, 0, 255, cv2.NORM_MINMAX)
-    # print(f'1Avg: {np.average(im_map)}')
-    # print(f'1Min: {np.min(im_map)}')
-    # print(f'1Max: {np.max(im_map)}\n')
     add(im_map, im_cloud)
 
 
@@ -80,11 +77,6 @@ def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
 
     ch3_diff_img = diff_img
     
-    # if np.max(diff_img) < 253 or True:
-    #     print(f'avg: {np.average(diff_img)}')
-    #     print(f'min: {np.min(diff_img)}')
-    #     print(f'max: {np.max(diff_img)}\n')
-    
     # np.sum을 하여 R,G,B의 종합적인 차이를 구함.
     if batchsize == 1:
         diff_img = np.sum(diff_img, axis=0)
@@ -94,8 +86,6 @@ def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
         
     diff_img *= 51
     
-    # hist = plt.hist(diff_img)
-    # plt.show()
     if batchsize == 1:
         diff_img[diff_img < thres] = 0.0
     else:
@@ -136,7 +126,7 @@ def Draw_Anomaly_image(real_img, diff_img, ch3_diff_img, batchsize):
     return anomaly_img
 
 
-def DrawResult(raw_img, diff_img: int, sav_fName, rawPATH, params=None):
+def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
         """[summary]: find_Center()를 활용해 raw Image의 중심점 찾고, 얻은 좌표 기반으로 diff_img 덧붙임.
         
         Related Functions:

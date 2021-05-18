@@ -71,14 +71,12 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
                 else:
                     fn += 1
         
-        tnr.append(fp / (tn+fp))
-        tpr.append(tp / (tp+fn))
-        fpr.append(1 - (fp / (fp+tn)))
-        x.append(thres / term)
-        # precision = tp / (tp+fp)
-        # recall = tp / (tp+fn)
-        # new_f1 = 2 / (1/precision + 1 / recall) 
-        curr_f1 = tp / (tp+(fp+fn)/2)
+        tnr.append(fp / (tn+fp + 1e-4))
+        tpr.append(tp / (tp+fn + 1e-4))
+        fpr.append(1 - (fp / (fp+tn + 1e-4)))
+        x.append(thres / (term + 1e-4))
+
+        curr_f1 = tp / (tp+(fp+fn)/2 + 1e-4)
         if (curr_f1 > Max_f1):
             Max_f1 = curr_f1
             prop_thres = thres / term
@@ -86,16 +84,11 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
             print(f'thres: {thres/term}')
             print(f'tn: {tn}\tfp: {fp}')
             print(f'fn: {fn}\ttp: {tp}')
-            print(f'f1-score: {tp / (tp+(fp+fn)/2)}')
+            print(f'f1-score: {tp / (tp+(fp+fn)/2 + 1e-4)}')
             # print(new_f1)
     plt.scatter(tnr, tpr, c='red')
     plt.savefig('./output/ganomaly/casting/test/roc/' + str(epoch4Test) + '.png')
-    # print('tnr\t\ttpr\t')
-    # for i in range(len(tnr)):
-    #     print(f'{tnr[i]: 4f}', end='')
-    #     print(f'\t{tpr[i] :.4f}', end='')
-    #     if(tpr[i] != 0):
-    #         print(f'\t{tnr[i]/tpr[i]}')
+    
     print(f'Max_f1: {Max_f1}')
     print(f'prop_thres: {prop_thres}')
     plt.clf()
@@ -144,7 +137,6 @@ def roc(labels, scores, epoch4Test, saveto='./',):
         # plt.show()
         
         if (epoch4Test == 1 or epoch4Test % 20 == 0):
-            # plt.savefig(os.path.join(saveto, "ROC.pdf"))
             plt.savefig('./output/ganomaly/casting/test/roc/abscore/' + str(epoch4Test) + '.png')
         plt.close()
 
