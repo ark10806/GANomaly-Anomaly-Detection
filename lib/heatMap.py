@@ -233,13 +233,15 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                             section1 += curr_MAT
                             cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (255, 0, 0))
                             if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec1, axis=1)):
-                                cv2.rectangle(raw_img, (x, y, w, h), (255,0,0))
+                                cv2.rectangle(raw_img, (x, y), (x+w, y+h), (255,0,0))
+                                # cv2.rectangle(raw_img, (x, y, w, h), (255,0,0))
                                 isAbnormal = True
                         else:
                             section2 += curr_MAT
                             cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (0, 255, 0))
                             if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec2, axis=1)):
-                                cv2.rectangle(raw_img, (x, y, w, h), (0,255,0))
+                                cv2.rectangle(raw_img, (x, y), (x+w, y+h), (0,255,0))
+                                # cv2.rectangle(raw_img, (x, y, w, h), (0,255,0))
                                 isAbnormal = True
                 
                 
