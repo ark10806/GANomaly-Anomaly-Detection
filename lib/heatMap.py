@@ -6,8 +6,8 @@ from lib.Hough import img_Contrast
 import seaborn as sns
 import matplotlib.pylab as plt
 import math
-
 from skimage import transform
+import os
 
 def add(image, heat_map, alpha=0, display=True, save=None, cmap='OrRd', axis='on', verbose=False):
 
@@ -85,7 +85,7 @@ def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
     diff_img = np.abs(diff_img)
         
     diff_img *= 51
-    
+
     if batchsize == 1:
         diff_img[diff_img < thres] = 0.0
     else:
@@ -170,7 +170,8 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
         else:
             rawPATH += 'abnormal\\' + sav_fName
         '''
-        rawPATH += sav_fName[:-12] + '.bmp'
+        # rawPATH += sav_fName[:-12] + '.bmp'
+        rawPATH = os.path.join(rawPATH, sav_fName[:-12] + '.bmp')
 
         raw_img = cv2.imread(rawPATH, cv2.IMREAD_COLOR)
         
