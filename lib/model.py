@@ -274,7 +274,7 @@ class BaseModel():
                     
                     
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
-                    sav_fName = allFiles[i][allFiles[i].rfind('\\')+1:]
+                    sav_fName = allFiles[i][allFiles[i].rfind('/')+1:]
                     # print(f'{sav_fName}\t', end='') # sav_fName: Paired file name between RAW Images and Preprocessed Images
                     print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .4f}%')
                     rawPATH = './RAW' # 1280x720 원본 이미지 경로.
