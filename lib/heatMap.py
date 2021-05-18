@@ -29,35 +29,34 @@ def add(image, heat_map, alpha=0, display=True, save=None, cmap='OrRd', axis='on
             print('save image: ' + save)
         plt.savefig(save, bbox_inches='tight', pad_inches=0)
 
-# def create_heatmap(im_map, im_cloud, kernel_size=(5,5),colormap=cv2.COLORMAP_JET,a1=0.5,a2=0.5):
 def create_heatmap(im_map, im_cloud, colormap=cv2.COLORMAP_HOT, a1=0.5, a2=0.5):
     im_cloud_clr = cv2.applyColorMap(im_cloud, colormap)
     im_map = im_map + im_cloud_clr
     
     return im_map
 
-def Fig2Arr(fig):
-    """[summary] plt.figure를 RGBA로 변환 (4-CH), shape=(h, w, l)
+# def Fig2Arr(fig):
+#     """[summary] plt.figure를 RGBA로 변환 (4-CH), shape=(h, w, l)
 
-    Args:
-        fig ([type]): [description]
-    """
-    fig.canvas.draw()
-    return np.array(fig.canvas.renderer._renderer)
+#     Args:
+#         fig ([type]): [description]
+#     """
+#     fig.canvas.draw()
+#     return np.array(fig.canvas.renderer._renderer)
 
-def create_heatmap2(im_map, im_cloud):
-    plt.clf()
-    ax = sns.heatmap(im_cloud, cmap="OrRd")
-    ax = Fig2Arr(ax)
-    cv2.imshow('hi',ax)
-    cv2.waitKey(0)
+# def create_heatmap2(im_map, im_cloud):
+#     plt.clf()
+#     ax = sns.heatmap(im_cloud, cmap="OrRd")
+#     ax = Fig2Arr(ax)
+#     cv2.imshow('hi',ax)
+#     cv2.waitKey(0)
     
-def create_heatmap3(im_map, im_cloud):
-    im_map = np.transpose(im_map, (1,2,0))
-    im_map = cv2.normalize(im_map, im_map, 0, 255, cv2.NORM_MINMAX)
-    im_cloud = np.transpose(im_cloud, (1,2,0))
-    im_cloud = cv2.normalize(im_cloud, im_cloud, 0, 255, cv2.NORM_MINMAX)
-    add(im_map, im_cloud)
+# def create_heatmap3(im_map, im_cloud):
+#     im_map = np.transpose(im_map, (1,2,0))
+#     im_map = cv2.normalize(im_map, im_map, 0, 255, cv2.NORM_MINMAX)
+#     im_cloud = np.transpose(im_cloud, (1,2,0))
+#     im_cloud = cv2.normalize(im_cloud, im_cloud, 0, 255, cv2.NORM_MINMAX)
+#     add(im_map, im_cloud)
 
 
 def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
@@ -164,13 +163,7 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                 param_sec2.append([row[1], row[2]])
             else:
                 print("Please check your parameters")
-        '''
-        if sav_fName[0] == '0':
-            rawPATH += 'normal\\' + sav_fName
-        else:
-            rawPATH += 'abnormal\\' + sav_fName
-        '''
-        # rawPATH += sav_fName[:-12] + '.bmp'
+                
         rawPATH = os.path.join(rawPATH, sav_fName[:-12] + '.bmp')
         print(rawPATH)
 
@@ -205,10 +198,7 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                 #검은 배경의 raw_diff 생성 후 위에서 얻은 a,b 좌표를 기준으로 하여 raw_img에 적용할 diff_img를 upsampling 하여 더함.
                 #순서: raw_diff Labeling -> Filtering -> diff 갱신. (param1, param2 에 따라 ab_score 달라지기 때문에 diff_img에도 반영해야함.)
                 raw_diff_1ch = np.zeros(shape=(720,1280))
-                print(f'np.shape(diff_img): {np.shape(diff_img)}')
                 diff_img = cv2.resize(diff_img, dsize=(2*r, 2*r), interpolation=cv2.INTER_LINEAR)
-                print(f'np.shape(diff_img): {np.shape(diff_img)}')
-                # raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img[:,:,1]
                 raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img
                 
                 raw_diff = np.array([raw_diff_1ch, raw_diff_1ch, raw_diff_1ch]).astype(np.uint8)
@@ -234,14 +224,12 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                             cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (255, 0, 0))
                             if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec1, axis=1)):
                                 cv2.rectangle(raw_img, (x, y), (x+w, y+h), (255,0,0))
-                                # cv2.rectangle(raw_img, (x, y, w, h), (255,0,0))
                                 isAbnormal = True
                         else:
                             section2 += curr_MAT
                             cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (0, 255, 0))
                             if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec2, axis=1)):
                                 cv2.rectangle(raw_img, (x, y), (x+w, y+h), (0,255,0))
-                                # cv2.rectangle(raw_img, (x, y, w, h), (0,255,0))
                                 isAbnormal = True
                 
                 
