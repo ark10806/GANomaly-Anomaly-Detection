@@ -172,6 +172,7 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
         '''
         # rawPATH += sav_fName[:-12] + '.bmp'
         rawPATH = os.path.join(rawPATH, sav_fName[:-12] + '.bmp')
+        print(rawPATH)
 
         raw_img = cv2.imread(rawPATH, cv2.IMREAD_COLOR)
         
