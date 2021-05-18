@@ -16,6 +16,7 @@ from scipy.optimize import brentq
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from matplotlib import rc
+import option as Option
 # rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 # rc('text', usetex=True)
 
@@ -30,13 +31,21 @@ def evaluate(labels, scores, RGB_score, epoch4Test, ab_thres, metric='RGB'):
         scores[scores <  threshold] = 0
         return f1_score(labels.cpu(), scores.cpu())
     elif metric == 'RGB':
-        if (epoch4Test == 1 or epoch4Test % 20 == 0):
+        if (epoch4Test == 1 or epoch4Test % Option.save_evalRGB_freq == 0):
             evaluate_RGB(labels, RGB_score, epoch4Test, ab_thres)
         return roc(labels, scores, epoch4Test)
     else:
         raise NotImplementedError("Check the evaluation metric.")
 
 def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
+    """[summary] saves ROC-curve as (epoch).png
+
+    Args:
+        labels ([type]): [description]
+        scores ([type]): [description]
+        epoch4Test ([type]): [description]
+        ab_thres ([type]): [description]
+    """    
     plt.clf()
     labels = labels.cpu()
     mapped = [0 for i in range(len(scores))]
@@ -96,14 +105,7 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
     plt.scatter(x, fpr, c='blue')
     plt.xlabel('Threshold')
     plt.ylabel('True Positive Rate')
-    plt.show()
-    
-
-# ##
-# def eval_roc(labels, scores, saveto=None):
-#     labels = labels.cpu()
-#     for thres in range()
-
+    # plt.show()
 
 def roc(labels, scores, epoch4Test, saveto='./',):
     """Compute ROC curve and ROC area for each class"""
