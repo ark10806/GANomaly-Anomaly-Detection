@@ -70,7 +70,7 @@ def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
         thres (float, optional): [description]  차영상의 한 픽셀의 차이가 thres보다 작을 때 0으로 만듦.
 
     Returns:
-        [type]: [description]
+        diff_img [np.array]: [shape=(1, 128, 128)] 
     """
     
     diff_img = real_img - generated_img
