@@ -276,7 +276,7 @@ class BaseModel():
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
                     sav_fName = allFiles[i]
                     sav_fName = sav_fName.replace("\\", '/')
-                    sav_fName = sav_fName[sav_fName.rfind('\\')+1:]
+                    sav_fName = sav_fName[sav_fName.rfind('/')+1:]
                     # sav_fName = allFiles[i][allFiles[i].rfind('\\')+1:]
                     # sav_fName = sav_fName.replace("\\", '/')
 
