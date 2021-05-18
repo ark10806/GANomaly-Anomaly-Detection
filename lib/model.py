@@ -275,14 +275,15 @@ class BaseModel():
                     
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
                     sav_fName = allFiles[i][allFiles[i].rfind('\\')+1:]
+                    sav_fName = sav_fName.replace("\\", '/')
                     
-                    linux_dir = sav_fName.rfind('/')
-                    windows_dir = sav_fName.rfind('\\')
-                    print(sav_fName, linux_dir, windows_dir)
-                    if(linux_dir < windows_dir):
-                        rawPATH = 'RAW\\'
-                    else:
-                        rawPATH = './RAW'
+                    # linux_dir = sav_fName.rfind('/')
+                    # windows_dir = sav_fName.rfind('\\')
+                    # print(sav_fName, linux_dir, windows_dir)
+                    # if(linux_dir < windows_dir):
+                    #     rawPATH = 'RAW\\'
+                    # else:
+                    #     rawPATH = './RAW'
                         # sav_fName = sav_fName.replace('\\', '/')
 
                     # print(sav_fName[0])
@@ -290,7 +291,7 @@ class BaseModel():
                     #     sav_fName = sav_fName.replace("\\", '/')
                     # print(f'{sav_fName}\t', end='') # sav_fName: Paired file name between RAW Images and Preprocessed Images
                     print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .4f}%')
-                    # rawPATH = './RAW' # 1280x720 원본 이미지 경로.
+                    rawPATH = './RAW' # 1280x720 원본 이미지 경로.
                     raw_img, new_diff_img, ZeroOneTwo_yehhhh, ab_score_dataSet = heatMap.DrawResult(diff_img, sav_fName, rawPATH, params=None)
                     ab_scores_dataSet.append(ab_score_dataSet)
 
