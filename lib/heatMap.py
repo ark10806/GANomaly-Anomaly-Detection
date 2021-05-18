@@ -207,6 +207,7 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                 raw_diff_1ch = np.zeros(shape=(720,1280))
                 print(f'np.shape(diff_img): {np.shape(diff_img)}')
                 diff_img = cv2.resize(diff_img, dsize=(2*r, 2*r), interpolation=cv2.INTER_LINEAR)
+                print(f'np.shape(diff_img): {np.shape(diff_img)}')
                 raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img[:,:,1]
                 
                 raw_diff = np.array([raw_diff_1ch, raw_diff_1ch, raw_diff_1ch]).astype(np.uint8)
