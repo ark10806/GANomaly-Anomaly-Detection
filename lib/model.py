@@ -271,8 +271,6 @@ class BaseModel():
                     
                     anomaly_img = heatMap.Draw_Anomaly_image(real_img, diff_img, ch3_diff_img, self.opt.batchsize)
                     
-                    
-                    
                     rawPATH = './RAW' # 1280x720 원본 이미지 경로.
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
                     sav_fName = allFiles[i]
@@ -301,11 +299,7 @@ class BaseModel():
                     anomaly_img = self.BGR2RGB(anomaly_img)
                     newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres)
                     
-                    if (self.epoch4Test == 1 or self.epoch4Test % 20 == 0):
-                        # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName, newImg)
-                        cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result.bmp', newImg)###
-                        # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName[:-4] + '_result.bmp', newImg)###
-                        # cv2.imwrite(f'output\\ganomaly\\casting\\test\\images\\' + sav_fName[:-4] + '_diff.bmp', np.transpose(generated_img, (2,1,0)))
+                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result.bmp', newImg)
 
             csvfile = open('./ab_score.csv', 'w', newline='')
             csvwriter = csv.writer(csvfile)
