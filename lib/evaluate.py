@@ -31,7 +31,7 @@ def evaluate(labels, scores, RGB_score, epoch4Test, ab_thres, opt, metric='RGB')
         return f1_score(labels.cpu(), scores.cpu())
     elif metric == 'RGB':
         if (epoch4Test == 1 or epoch4Test % opt.save_evalRGB_freq == 0):
-            evaluate_RGB(labels, RGB_score, epoch4Test, ab_thres, opt)
+            evaluate_RGB(labels, RGB_score, epoch4Test, ab_thres)
         return roc(labels, scores, epoch4Test)
     else:
         raise NotImplementedError("Check the evaluation metric.")
