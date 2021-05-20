@@ -255,6 +255,7 @@ class BaseModel():
 
                 self.times.append(time_o - time_i)
 
+                ab_thres = 0.031
                 # Save test images.
                 if self.opt.save_test_images:
                     dst = os.path.join(self.opt.outf, self.opt.name, 'test', 'images')
@@ -286,7 +287,6 @@ class BaseModel():
                     if raw_img is None: # 총 3523 개의 RAW Image 중 8개의 사진에서 원 검출을 실패했을 경우.
                         continue
                     
-                    ab_thres = 0.031   # 이상치 검출을 위한 역치
                     real_img = cv2.normalize(real_img, real_img, 0, 255, cv2.NORM_MINMAX)
                     
                     
