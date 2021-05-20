@@ -32,12 +32,12 @@ class Options():
         self.parser.add_argument('--batchsize', type=int, default=1, help='input batch size')
         self.parser.add_argument('--workers', type=int, help='number of data loading workers', default=8)
         self.parser.add_argument('--droplast', action='store_true', default=True, help='Drop last batch size.')
-        self.parser.add_argument('--isize', type=int, default=128, help='input image size.') #32 #160 #256
-        self.parser.add_argument('--nc', type=int, default=3, help='input image channels') # 3
+        self.parser.add_argument('--isize', type=int, default=128, help='input image size.')
+        self.parser.add_argument('--nc', type=int, default=3, help='input image channels')
         self.parser.add_argument('--nz', type=int, default=600, help='size of the latent z vector')
-        self.parser.add_argument('--ngf', type=int, default=196)#64
+        self.parser.add_argument('--ngf', type=int, default=196)
         self.parser.add_argument('--ndf', type=int, default=196)
-        self.parser.add_argument('--extralayers', type=int, default=1, help='Number of extra layers on gen and disc')#1
+        self.parser.add_argument('--extralayers', type=int, default=1, help='Number of extra layers on gen and disc')
         self.parser.add_argument('--device', type=str, default='gpu', help='Device: gpu | cpu')
         self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
         self.parser.add_argument('--ngpu', type=int, default=1, help='number of GPUs to use')
@@ -45,7 +45,7 @@ class Options():
         self.parser.add_argument('--model', type=str, default='ganomaly', help='chooses which model to use. ganomaly')
         self.parser.add_argument('--display_server', type=str, default="http://localhost", help='visdom server of the web display')
         self.parser.add_argument('--display_port', type=int, default=8097, help='visdom port of the web display')
-        self.parser.add_argument('--display_id', type=int, default=0, help='window id of the web display')# 0
+        self.parser.add_argument('--display_id', type=int, default=0, help='window id of the web display')
         self.parser.add_argument('--display', action='store_true', help='Use visdom.')
         self.parser.add_argument('--outf', default='./output', help='folder to output images and model checkpoints')
         self.parser.add_argument('--manualseed', default=-1, type=int, help='manual seed')
@@ -64,12 +64,12 @@ class Options():
         self.parser.add_argument('--resume', default='', help="path to checkpoints (to continue training)")
         self.parser.add_argument('--phase', type=str, default='train', help='train, val, test, etc')
         self.parser.add_argument('--iter', type=int, default=0, help='Start from iteration i')
-        self.parser.add_argument('--niter', type=int, default=500, help='number of epochs to train for') #100
-        self.parser.add_argument('--beta1', type=float, default=0.43, help='momentum term of adam')#0.4
-        self.parser.add_argument('--lr', type=float, default=0.00006, help='initial learning rate for adam')#0.0001
-        self.parser.add_argument('--w_adv', type=float, default=0.6, help='Adversarial loss weight')#1
-        self.parser.add_argument('--w_con', type=float, default=120, help='Reconstruction loss weight')#50
-        self.parser.add_argument('--w_enc', type=float, default=3, help='Encoder loss weight.')#1
+        self.parser.add_argument('--niter', type=int, default=500, help='number of epochs to train for')
+        self.parser.add_argument('--beta1', type=float, default=0.43, help='momentum term of adam')
+        self.parser.add_argument('--lr', type=float, default=0.00006, help='initial learning rate for adam')
+        self.parser.add_argument('--w_adv', type=float, default=0.6, help='Adversarial loss weight')
+        self.parser.add_argument('--w_con', type=float, default=120, help='Reconstruction loss weight')
+        self.parser.add_argument('--w_enc', type=float, default=3, help='Encoder loss weight.')
         self.isTrain = True
         self.opt = None
 
