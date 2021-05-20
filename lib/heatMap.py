@@ -125,7 +125,7 @@ def Draw_Anomaly_image(real_img, diff_img, ch3_diff_img, batchsize):
     return anomaly_img
 
 
-def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
+def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
         """[summary]: find_Center()를 활용해 raw Image의 중심점 찾고, 얻은 좌표 기반으로 diff_img 덧붙임.
         
         Related Functions:
@@ -201,8 +201,8 @@ def DrawResult(diff_img: int, sav_fName, rawPATH, params=None):
                 print(np.shape(diff_img))
                 diff_img = cv2.resize(diff_img[:,:], dsize=(2*r, 2*r), interpolation=cv2.INTER_LINEAR)
                 print(np.shape(diff_img))
-                exit(0)
-                raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img
+                print(np.shape(diff_img[:,:]))
+                raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img[:,:]
                 
                 raw_diff = np.array([raw_diff_1ch, raw_diff_1ch, raw_diff_1ch]).astype(np.uint8)
                 
