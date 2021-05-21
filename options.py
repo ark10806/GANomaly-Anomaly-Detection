@@ -104,11 +104,17 @@ class Options():
             self.opt.name = "%s/%s" % (self.opt.model, self.opt.dataset)
         expr_dir = os.path.join(self.opt.outf, self.opt.name, 'train')
         test_dir = os.path.join(self.opt.outf, self.opt.name, 'test')
+        roc_dir = os.path.join(test_dir, 'roc')
+        abscore_dir = os.path.join(roc_dir, 'abscore')
 
         if not os.path.isdir(expr_dir):
             os.makedirs(expr_dir)
         if not os.path.isdir(test_dir):
             os.makedirs(test_dir)
+        if not os.path.isdir(roc_dir):
+            os.makedirs(roc_dir)
+        if not os.path.isdir(abscore_dir):
+            os.makedirs(abscore_dir)
 
         file_name = os.path.join(expr_dir, 'opt.txt')
         with open(file_name, 'wt') as opt_file:
