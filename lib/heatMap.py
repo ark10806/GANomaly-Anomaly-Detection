@@ -198,10 +198,7 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
                 #검은 배경의 raw_diff 생성 후 위에서 얻은 a,b 좌표를 기준으로 하여 raw_img에 적용할 diff_img를 upsampling 하여 더함.
                 #순서: raw_diff Labeling -> Filtering -> diff 갱신. (param1, param2 에 따라 ab_score 달라지기 때문에 diff_img에도 반영해야함.)
                 raw_diff_1ch = np.zeros(shape=(720,1280))
-                print(np.shape(diff_img))
                 diff_img = cv2.resize(diff_img[:,:], dsize=(2*r, 2*r), interpolation=cv2.INTER_LINEAR)
-                print(np.shape(diff_img))
-                print(np.shape(diff_img[:,:]))
                 raw_diff_1ch[b-r:b+r, a-r:a+r] = diff_img[:,:]
                 
                 raw_diff = np.array([raw_diff_1ch, raw_diff_1ch, raw_diff_1ch]).astype(np.uint8)
