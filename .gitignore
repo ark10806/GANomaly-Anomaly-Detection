@@ -1,6 +1,6 @@
-data/
-RAW/
-output/
+data/*
+RAW/*
+output/*
 *.pth
 *.zip
 *.csv
