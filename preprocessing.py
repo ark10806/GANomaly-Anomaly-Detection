@@ -10,7 +10,8 @@ import parameters as params
         sav_iSize 크기의 1구간 사진.
         1구간을 제외한 다른 부분은 검은색 마스킹 처리
 """
-PATH = 'C:\\Transfer\\'
+# PATH = 'C:\\Transfer\\'
+PATH = params.raw_PATH
 
 directory = PATH + 'cropped'
 try:
