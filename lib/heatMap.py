@@ -8,6 +8,7 @@ import matplotlib.pylab as plt
 import math
 from skimage import transform
 import os
+import parameters as param
 
 def add(image, heat_map, alpha=0, display=True, save=None, cmap='OrRd', axis='on', verbose=False):
 
@@ -164,7 +165,7 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
             else:
                 print("Please check your parameters")
                 
-        rawPATH = os.path.join(rawPATH, sav_fName[:-12] + '.bmp')
+        rawPATH = os.path.join(rawPATH, sav_fName[:-4] + param.PREFIX_RAW)
         print(rawPATH)
 
         raw_img = cv2.imread(rawPATH, cv2.IMREAD_COLOR)
