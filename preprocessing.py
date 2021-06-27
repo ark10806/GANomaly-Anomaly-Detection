@@ -116,7 +116,7 @@ for filePath in prnFile(PATH, PREFIX_BMP):
             raw = cv2.bitwise_and(backGD_circle, raw)
             img = raw[rectY:(rectY+2*r), rectX:(rectX+2*r)]
             
-            print(f'{os.path.basename(filePath)} saved')
+            print(f'{k}:\t{os.path.basename(filePath)}\tsaved')
             cv2.imwrite(PATH + 'cropped\\' + os.path.basename(filePath)[:-4] + PREFIX_PNG, img)
     else:
         fail_list.append(k)
