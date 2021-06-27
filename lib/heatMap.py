@@ -166,7 +166,6 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
                 print("Please check your parameters")
                 
         rawPATH = os.path.join(rawPATH, sav_fName[:-4] + param.PREFIX_RAW)
-        print(rawPATH)
 
         raw_img = cv2.imread(rawPATH, cv2.IMREAD_COLOR)
         

@@ -24,6 +24,7 @@ import cv2
 import time
 import copy
 import csv
+import parameters as params
 
 
 import matplotlib.pyplot as plt
@@ -209,12 +210,15 @@ class BaseModel():
             if self.opt.load_weights:
                 path = "./output/{}/{}/train/weights/netG.pth".format(self.name.lower(), self.opt.dataset)
                 pretrained_dict = torch.load(path)['state_dict']
-                
+                directory = f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake'
                 try:
                     self.netg.load_state_dict(pretrained_dict)
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+
                 except IOError:
                     raise IOError("netG weights not found")
-                print('   Loaded weights bb.')
+                print('   Loaded weights.')
 
             self.opt.phase = 'test'
 
@@ -278,7 +282,7 @@ class BaseModel():
                     sav_fName = sav_fName.replace("\\", '/')
                     sav_fName = sav_fName[sav_fName.rfind('/')+1:]
 
-                    print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .4f}%')
+                    print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .2f}%')
                     raw_img, new_diff_img, ZeroOneTwo_yehhhh, ab_score_dataSet = heatMap.DrawResult(diff_img, sav_fName, rawPATH, params=None)
                     ab_scores_dataSet.append(ab_score_dataSet)
 
@@ -290,16 +294,17 @@ class BaseModel():
                     real_img = cv2.normalize(real_img, real_img, 0, 255, cv2.NORM_MINMAX)
                     
                     
+                    
                     #make_pannel 이전에 적용시킬것
                     real_img = self.BGR2RGB(real_img)
-                    
                     generated_img = cv2.normalize(generated_img, generated_img, 0, 255, cv2.NORM_MINMAX)
                     generated_img = self.BGR2RGB(generated_img)
-                    # print(np.shape(generated_img))
+                    
                     anomaly_img = self.BGR2RGB(anomaly_img)
                     newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres)
-                    
-                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result.bmp', newImg)
+
+                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake/{sav_fName[:-4]}_fake{params.PREFIX_SAV}', np.transpose(generated_img, (1,2,0)))
+                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result{params.PREFIX_SAV}', newImg)
 
             csvfile = open('./ab_score.csv', 'w', newline='')
             csvwriter = csv.writer(csvfile)
