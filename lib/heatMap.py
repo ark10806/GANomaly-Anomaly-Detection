@@ -60,7 +60,7 @@ def create_heatmap(im_map, im_cloud, colormap=cv2.COLORMAP_HOT, a1=0.5, a2=0.5):
 #     add(im_map, im_cloud)
 
 
-def calc_diff(real_img, generated_img, batchsize, thres=24.02): # 44.02
+def calc_diff(real_img, generated_img, batchsize, thres=48.02): # 44.02 24.02
     """[summary]
 
     Args:
@@ -165,7 +165,9 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
             else:
                 print("Please check your parameters")
                 
-        rawPATH = os.path.join(rawPATH, sav_fName[:-4] + param.PREFIX_RAW)
+        # rawPATH = os.path.join(rawPATH, sav_fName[:-4] + param.PREFIX_RAW)
+        rawPATH = rawPATH + '/' + sav_fName[:-12] + param.PREFIX_RAW
+        print(f'rawPATHHJ: {rawPATH}')
 
         raw_img = cv2.imread(rawPATH, cv2.IMREAD_COLOR)
         

@@ -55,13 +55,13 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
     
     Max_f1 = 0
     prop_thres = 0
-    term = 1000
-    thres_range = 60 #0.00001~0.01000
+    term = 100000
+    thres_range = 800 #0.00001~0.01000
 
     # for thres in range(20000, 30000, 1):
     for thres in range(thres_range):
         # if thres_range % thres/10 == 0:
-        print(f'{thres / thres_range * 100: .2f}%')
+        # print(f'{thres / thres_range * 100: .2f}%')
         tn = 0
         fp = 0
         fn = 0
@@ -104,7 +104,7 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
     plt.scatter(x, fpr, c='blue')
     plt.xlabel('Threshold')
     plt.ylabel('True Positive Rate')
-    # plt.show()
+    plt.show()
 
 def roc(labels, scores, epoch4Test, saveto='./',):
     """Compute ROC curve and ROC area for each class"""

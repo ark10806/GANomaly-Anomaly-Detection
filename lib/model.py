@@ -259,7 +259,7 @@ class BaseModel():
 
                 self.times.append(time_o - time_i)
 
-                ab_thres = 0.031
+                ab_thres = 0.00156
                 # Save test images.
                 if self.opt.save_test_images:
                     dst = os.path.join(self.opt.outf, self.opt.name, 'test', 'images')
@@ -277,6 +277,8 @@ class BaseModel():
                     anomaly_img = heatMap.Draw_Anomaly_image(real_img, diff_img, ch3_diff_img, self.opt.batchsize)
                     
                     rawPATH = './RAW' # 1280x720 원본 이미지 경로.
+                    rawPATH = params.raw_PATH
+                    print(f'rawPATH: {rawPATH}')
                     allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
                     sav_fName = allFiles[i]
                     sav_fName = sav_fName.replace("\\", '/')
@@ -303,17 +305,17 @@ class BaseModel():
                     anomaly_img = self.BGR2RGB(anomaly_img)
                     newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres)
 
-                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/anomaly/{sav_fName[:-4]}_anomaly{params.PREFIX_SAV}', np.transpose(anomaly_img, (1,2,0)))
-                    cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake/{sav_fName[:-4]}_fake{params.PREFIX_SAV}', np.transpose(generated_img, (1,2,0)))
+                    # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/anomaly/{sav_fName[:-4]}_anomaly{params.PREFIX_SAV}', np.transpose(anomaly_img, (1,2,0)))
+                    # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake/{sav_fName[:-4]}_fake{params.PREFIX_SAV}', np.transpose(generated_img, (1,2,0)))
                     cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result{params.PREFIX_SAV}', newImg)
 
-            csvfile = open('./ab_score.csv', 'w', newline='')
-            csvwriter = csv.writer(csvfile)
-            my_gt = self.gt_labels.cpu().numpy()
+            # csvfile = open('./ab_score.csv', 'w', newline='')
+            # csvwriter = csv.writer(csvfile)
+            # my_gt = self.gt_labels.cpu().numpy()
 
-            for idx in range(len(ab_RGB)):
-                csvwriter.writerow([ab_scores_dataSet[idx], int(ab_RGB[idx]>=ab_thres)])
-            csvfile.close()
+            # for idx in range(len(ab_RGB)):
+            #     csvwriter.writerow([ab_scores_dataSet[idx], int(ab_RGB[idx]>=ab_thres)])
+            # csvfile.close()
 
             print(f'{time.time() - stT: .4f}sec')
             # Measure inference time.

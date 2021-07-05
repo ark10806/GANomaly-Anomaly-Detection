@@ -13,7 +13,8 @@ import parameters as params
 # PATH = 'C:\\Transfer\\'
 PATH = params.raw_PATH
 
-directory = PATH + 'cropped'
+directory = PATH + '/cropped'
+print(directory)
 try:
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -88,7 +89,7 @@ for filePath in prnFile(PATH, params.PREFIX_RAW):
             # img = np.transpose(img, (2,0,1))
             # img = cv2.normalize(img, img, 0, 1, cv2.NORM_MINMAX).get().astype(np.uint8)
             print(f'{k}:\t{os.path.basename(filePath)}\tsaved')
-            cv2.imwrite(PATH + 'cropped\\' + os.path.basename(filePath)[:-4] + params.PREFIX_SAV, img)
+            cv2.imwrite(PATH + '/cropped/' + os.path.basename(filePath)[:-4] + params.PREFIX_SAV, img)
 
     else:
         fail_list.append(k)
