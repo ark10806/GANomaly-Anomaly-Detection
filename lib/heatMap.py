@@ -135,9 +135,6 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
         Args:
             raw_img ([type]): [description] shape=(720, 1280, 3)
             diff_img ([type]): [description] maybe shape=(3, w, h)
-            
-            0302 추가->
-            params: [[index, area, brightness, section, exception]] 형태의 2차원 리스트.
         
         Returns:
             raw_img ([numpy.array]): 점수처리된 720x720 이미지
@@ -145,26 +142,6 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
             isAbnormal ([boolean]): 큰비전 Params 에 하나라도 걸리는 요소가 있을 시 True 즉 비정상 반환.
         """
         
-        # params = [[1, 1200, 30, 1, 0],
-        #           [2, 2000, 50, 2, 0],
-        #           [3, 50, 60, 1, 1],
-        #           [4, 200, 50, 1, 1]]
-        
-        params = [[1, 119, 18, 1, 0],
-                  [2, 119, 18, 2, 0]]  ## 큰비전에서 설정한 Parameter 값. 함수 매개변수에서도 이렇게 주면 됩니다.
-        
-        param_sec1 = []
-        param_sec2 = []
-        ab_score_dataSet = 0
-        
-        for row in params:
-            if(row[3] == 1):
-                param_sec1.append([row[1], row[2]])
-            elif(row[3] == 2):
-                param_sec2.append([row[1], row[2]])
-            else:
-                print("Please check your parameters")
-                
         # rawPATH = os.path.join(rawPATH, sav_fName[:-4] + param.PREFIX_RAW)
         rawPATH = rawPATH + '/' + sav_fName[:-12] + param.PREFIX_RAW
         print(f'rawPATHHJ: {rawPATH}')
@@ -218,24 +195,29 @@ def DrawResult(diff_img: np.array, sav_fName, rawPATH, params=None):
                     
                     curr_MAT = np.where(labels==i, raw_diff[0], 0)  # The Matrix that contains flaw whose label is 'i'
                     curr_brightness = np.sum(curr_MAT) / area
+                    
+                    ab_sec = np.array([area, curr_brightness])
 
-                    if area > 119 and curr_brightness > 15:
-                        ab_score_dataSet += curr_brightness * area
-                        if distance < (r-204+150):
-                            section1 += curr_MAT
-                            cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (255, 0, 0))
-                            if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec1, axis=1)):
+                    # section-1
+                    if distance < (r-204+150):
+                        section1 += curr_MAT
+                        cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (255, 0, 0))
+                        for cond_lower, cond_upper in param.cond_sec1:
+                            if np.prod((cond_lower < ab_sec) * (ab_sec < cond_upper)):
                                 cv2.rectangle(raw_img, (x, y), (x+w, y+h), (255,0,0))
                                 isAbnormal = True
-                        else:
-                            section2 += curr_MAT
-                            cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (0, 255, 0))
-                            if np.sum(np.prod(np.array([area, curr_brightness]) > param_sec2, axis=1)):
+                    
+                    # section-2
+                    else:
+                        section2 += curr_MAT
+                        cv2.putText(raw_img, f'{area: .0f}({curr_brightness: .0f})', (x+w-5, y+h), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.3, (0, 255, 0))
+                        for cond_lower, cond_upper in param.cond_sec2:
+                            if np.prod((cond_lower < ab_sec) * (ab_sec < cond_upper)):
                                 cv2.rectangle(raw_img, (x, y), (x+w, y+h), (0,255,0))
                                 isAbnormal = True
-                
+
                 
                 raw_img = raw_img[:, int(a-720/2):int(a+720/2), :]
-                return raw_img, raw_diff_1ch, isAbnormal, ab_score_dataSet
+                return raw_img, raw_diff_1ch, isAbnormal
         else:
             return None

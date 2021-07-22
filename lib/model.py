@@ -234,6 +234,7 @@ class BaseModel():
             epoch_iter = 0
             self.batchNum = 0
             ab_RGB = []
+            is_abList = []
             stT = time.time()
             allFiles, _ = map(list, zip(*self.dataloader['test'].dataset.samples))
             total_test_size = len(allFiles)
@@ -259,7 +260,6 @@ class BaseModel():
 
                 self.times.append(time_o - time_i)
 
-                ab_thres = 0.00156
                 # Save test images.
                 if self.opt.save_test_images:
                     dst = os.path.join(self.opt.outf, self.opt.name, 'test', 'images')
@@ -269,7 +269,7 @@ class BaseModel():
                     
                     real_img = real.cpu().data.numpy().squeeze()
                     generated_img = fake.cpu().data.numpy().squeeze()
-                    diff_img, ch3_diff_img = heatMap.calc_diff(real_img, generated_img, self.opt.batchsize)
+                    diff_img, ch3_diff_img = heatMap.calc_diff(real_img, generated_img, self.opt.batchsize, params.filter_thres)
 
                     anomaly_img = np.zeros(shape=(self.opt.isize, self.opt.isize, self.opt.nc))
                     
@@ -285,10 +285,10 @@ class BaseModel():
                     sav_fName = sav_fName[sav_fName.rfind('/')+1:]
 
                     print(f'{i+1: 5d} / {total_test_size} : {i / total_test_size * 100: .2f}%')
-                    raw_img, new_diff_img, ZeroOneTwo_yehhhh, ab_score_dataSet = heatMap.DrawResult(diff_img, sav_fName, rawPATH, params=None)
-                    ab_scores_dataSet.append(ab_score_dataSet)
+                    raw_img, new_diff_img, is_abnormal = heatMap.DrawResult(diff_img, sav_fName, rawPATH, params=None)
 
                     ab_RGB.append(np.sum(new_diff_img) / (self.opt.isize*self.opt.isize*255)) ## ab_RGB를 Draw_Result 하고 계산해야함!
+                    is_abList.append(is_abnormal)
                     
                     if raw_img is None: # 총 3523 개의 RAW Image 중 8개의 사진에서 원 검출을 실패했을 경우.
                         continue
@@ -303,19 +303,11 @@ class BaseModel():
                     generated_img = self.BGR2RGB(generated_img)
                     
                     anomaly_img = self.BGR2RGB(anomaly_img)
-                    newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres)
+                    newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, params.ab_thres, is_abnormal, params.use_abscore)
 
                     # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/anomaly/{sav_fName[:-4]}_anomaly{params.PREFIX_SAV}', np.transpose(anomaly_img, (1,2,0)))
                     # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake/{sav_fName[:-4]}_fake{params.PREFIX_SAV}', np.transpose(generated_img, (1,2,0)))
                     cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/{sav_fName[:-4]}_result{params.PREFIX_SAV}', newImg)
-
-            # csvfile = open('./ab_score.csv', 'w', newline='')
-            # csvwriter = csv.writer(csvfile)
-            # my_gt = self.gt_labels.cpu().numpy()
-
-            # for idx in range(len(ab_RGB)):
-            #     csvwriter.writerow([ab_scores_dataSet[idx], int(ab_RGB[idx]>=ab_thres)])
-            # csvfile.close()
 
             print(f'{time.time() - stT: .4f}sec')
             # Measure inference time.
@@ -324,7 +316,7 @@ class BaseModel():
 
             # Scale error vector between [0, 1]
             self.an_scores = (self.an_scores - torch.min(self.an_scores)) / (torch.max(self.an_scores) - torch.min(self.an_scores))
-            auc = evaluate(self.gt_labels, self.an_scores, ab_RGB, self.epoch4Test, ab_thres, self.opt, metric=self.opt.metric)
+            auc = evaluate(self.gt_labels, self.an_scores, ab_RGB, self.epoch4Test, params.ab_thres, is_abList, params.use_abscore, self.opt, metric=self.opt.metric)
             performance = OrderedDict([('Avg Run Time (ms/batch)', self.times), (self.opt.metric, auc)])
 
             if self.opt.display_id > 0 and self.opt.phase == 'test':
@@ -337,7 +329,7 @@ class BaseModel():
         arr = np.transpose(cv2.cvtColor(arr, cv2.COLOR_BGR2RGB), (2,0,1))
         return arr
     
-    def make_result_panel(self, raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres=0.125):
+    def make_result_panel(self, raw_img, real_img, generated_img, anomaly_img, ab_RGB, ab_thres, is_abList, use_abscore=True):
         houseParty = []
         tmp0 = []
         tmp1 = []
@@ -365,8 +357,7 @@ class BaseModel():
         scorePanel = np.zeros(shape=(self.opt.batchsize, int(self.opt.isize/2), self.opt.isize, self.opt.nc))
         for bts in range(self.opt.batchsize):
             tmp = np.transpose(scorePanel[bts], (2,0,1))
-            if(ab_RGB[bts + self.batchNum*self.opt.batchsize] >= ab_thres): #abnormal
-                
+            if( (use_abscore and ab_RGB[bts + self.batchNum*self.opt.batchsize] >= ab_thres) or ((not use_abscore) and is_abList[bts + self.batchNum*self.opt.batchsize])): #abnormal
                 #tp-RED
                 if (self.gt_labels[bts + self.batchNum*self.opt.batchsize] == 0):
                     tmp[2] = 234

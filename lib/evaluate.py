@@ -19,7 +19,7 @@ from matplotlib import rc
 # rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 # rc('text', usetex=True)
 
-def evaluate(labels, scores, RGB_score, epoch4Test, ab_thres, opt, metric='RGB'):
+def evaluate(labels, scores, RGB_score, epoch4Test, ab_thres, is_abList, use_abscore, opt, metric='RGB'):
     if metric == 'roc':
         return roc(labels, scores, epoch4Test)
     elif metric == 'auprc':
@@ -31,12 +31,12 @@ def evaluate(labels, scores, RGB_score, epoch4Test, ab_thres, opt, metric='RGB')
         return f1_score(labels.cpu(), scores.cpu())
     elif metric == 'RGB':
         if (epoch4Test == 1 or epoch4Test % opt.save_evalRGB_freq == 0):
-            evaluate_RGB(labels, RGB_score, epoch4Test, ab_thres)
+            evaluate_RGB(labels, RGB_score, epoch4Test, ab_thres, is_abList, use_abscore)
         return roc(labels, scores, epoch4Test)
     else:
         raise NotImplementedError("Check the evaluation metric.")
 
-def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
+def evaluate_RGB(labels, scores, epoch4Test, ab_thres, is_abList, use_abscore):
     """[summary] saves ROC-curve as (epoch).png
 
     Args:
@@ -68,7 +68,7 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres):
         tp = 0
         
         for i in range(len(scores)):
-            if (scores[i] >= thres / term): #abnormal
+            if ((use_abscore and scores[i] >= thres / term) or ((not use_abscore) and is_abList[i])): #abnormal
                 if(labels[i] == 0):
                     tp += 1
                 else:
