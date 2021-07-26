@@ -104,7 +104,7 @@ def evaluate_RGB(labels, scores, epoch4Test, ab_thres, is_abList, use_abscore):
     plt.scatter(x, fpr, c='blue')
     plt.xlabel('Threshold')
     plt.ylabel('True Positive Rate')
-    plt.show()
+    # plt.show()
 
 def roc(labels, scores, epoch4Test, saveto='./',):
     """Compute ROC curve and ROC area for each class"""

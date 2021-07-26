@@ -303,7 +303,7 @@ class BaseModel():
                     generated_img = self.BGR2RGB(generated_img)
                     
                     anomaly_img = self.BGR2RGB(anomaly_img)
-                    newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, params.ab_thres, is_abnormal, params.use_abscore)
+                    newImg = self.make_result_panel(raw_img, real_img, generated_img, anomaly_img, ab_RGB, params.ab_thres, is_abList, params.use_abscore)
 
                     # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/anomaly/{sav_fName[:-4]}_anomaly{params.PREFIX_SAV}', np.transpose(anomaly_img, (1,2,0)))
                     # cv2.imwrite(f'./output/{self.name.lower()}/{self.opt.dataset}/test/images/fake/{sav_fName[:-4]}_fake{params.PREFIX_SAV}', np.transpose(generated_img, (1,2,0)))
@@ -357,6 +357,8 @@ class BaseModel():
         scorePanel = np.zeros(shape=(self.opt.batchsize, int(self.opt.isize/2), self.opt.isize, self.opt.nc))
         for bts in range(self.opt.batchsize):
             tmp = np.transpose(scorePanel[bts], (2,0,1))
+            # print(is_abList)
+            # exit(0)
             if( (use_abscore and ab_RGB[bts + self.batchNum*self.opt.batchsize] >= ab_thres) or ((not use_abscore) and is_abList[bts + self.batchNum*self.opt.batchsize])): #abnormal
                 #tp-RED
                 if (self.gt_labels[bts + self.batchNum*self.opt.batchsize] == 0):

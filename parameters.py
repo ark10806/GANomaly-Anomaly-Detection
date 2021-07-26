@@ -10,7 +10,8 @@ raw_PATH = 'C:/knv/Projs/2021-1/KnV/0.MAIN/GANomaly_Anomaly_Detection/RAW'
 #True:  abnormal score으로 정상/비정상 판별
 #False: cv2.labeling 을 활용한 바운딩 조건으로 정상/비정상 판별
 use_abscore = False
-filter_thres = 0.00156
+ab_thres = 0.00156
+filter_thres = 48.02
 '''
 secN은 N-section에 대한 기준.
 cond_secN = array([

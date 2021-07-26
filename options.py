@@ -29,7 +29,7 @@ class Options():
         # Base
         self.parser.add_argument('--dataset', default='casting', help='folder | cifar10 | mnist ')
         self.parser.add_argument('--dataroot', default='', help='path to dataset')
-        self.parser.add_argument('--batchsize', type=int, default=1, help='input batch size')
+        self.parser.add_argument('--batchsize', type=int, default=2, help='input batch size')
         self.parser.add_argument('--workers', type=int, help='number of data loading workers', default=8)
         self.parser.add_argument('--droplast', action='store_true', default=True, help='Drop last batch size.')
         self.parser.add_argument('--isize', type=int, default=128, help='input image size.')
