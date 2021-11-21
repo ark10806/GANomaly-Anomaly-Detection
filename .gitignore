@@ -4,3 +4,5 @@ output/*
 *.pth
 *.zip
 *.csv
+__pycache__
+.vscode
